@@ -29,9 +29,10 @@ namespace ConsoleApp1
 {
     class Program
     {
-        private const string ConfigFile = "keychain.cfg";
-        private const string DropSqlFile = "drop_keychain.sql";
-        private const string CreateSqlFile = "keychain.sql";
+        // Set these paths to your own
+        private const string ConfigFile = "C:\\Users\\sundance\\keychain-builds\\windows\\Win32\\Debug\\test-keychain\\keychain.cfg";
+        private const string DropSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\drop_keychain.sql";
+        private const string CreateSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\keychain.sql";
         public static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
@@ -89,6 +90,7 @@ namespace ConsoleApp1
             int rcode = -1;
             string address;
             string[] mnemonics;
+            logger.Info("Seeding database");
             rcode = gatewayA.seed(out address, out mnemonics);
             //Assert.AreEqual(0, rcode);
 
@@ -106,17 +108,26 @@ namespace ConsoleApp1
             {
                 logger.Info("Creating personas");
                 Persona personaA;
-                string personaNameA = "DotNetTest";
-                string personaSubNameA = "A";
-                rcode = gatewayA.createPersona(out personaA, personaNameA, personaSubNameA, SecurityLevel.Medium);
-                //Assert.AreEqual(0, rcode);
+                gatewayA.getActivePersona(out personaA);
 
+                if (personaA == null)
+                {
+                    string personaNameA = "DotNetTest";
+                    string personaSubNameA = "A";
+                    rcode = gatewayA.createPersona(out personaA, personaNameA, personaSubNameA, SecurityLevel.Medium);
+                    //Assert.AreEqual(0, rcode);
+                }
 
                 Persona personaB;
-                string personaNameB = "DotNetTest";
-                string personaSubNameB = "A";
-                rcode = gatewayB.createPersona(out personaB, personaNameB, personaSubNameB, SecurityLevel.Medium);
-                //Assert.AreEqual(0, rcode);
+                gatewayA.getActivePersona(out personaB);
+          
+                if (personaB == null)
+                {
+                    string personaNameB = "DotNetTest";
+                    string personaSubNameB = "A";
+                    rcode = gatewayB.createPersona(out personaB, personaNameB, personaSubNameB, SecurityLevel.Medium);
+                    //Assert.AreEqual(0, rcode);
+                }
             }
 
 
@@ -132,16 +143,20 @@ namespace ConsoleApp1
 
             logger.Info("Waiting on both personas to mature");
             Persona activePersonaA, activePersonaB;
-            do
+            gatewayA.getActivePersona(out activePersonaA);
+            gatewayB.getActivePersona(out activePersonaB);
+
+            while (!activePersonaA.isMature() || !activePersonaB.isMature())
             {
                 Thread.Sleep(31000);
                 gatewayA.getActivePersona(out activePersonaA);
                 logger.Info("A root maturity: " + activePersonaA.getRootMaturity());
+                logger.Info("A status: " + activePersonaA.getStatus());
 
                 gatewayB.getActivePersona(out activePersonaB);
                 logger.Info("B root maturity: " + activePersonaB.getRootMaturity());
+                logger.Info("B status: " + activePersonaB.getStatus());
             }
-            while (!activePersonaA.isMature() || !activePersonaB.isMature());
 
 
 
@@ -281,7 +296,14 @@ namespace ConsoleApp1
             //Assert.AreEqual(rClearTextA, clearTextB);
             //Assert.AreEqual(1, results.Count);
             //Assert.AreEqual(true, results[0].verified);
+            logger.Info("Done test.");
+            logger.Info("Stopping monitor");
+            monitorA.onPause();
+            monitorA.onStop();
 
+            monitorB.onPause();
+            monitorB.onStop();
+            logger.Info("Monitor stopped");
         }
     }
 }
