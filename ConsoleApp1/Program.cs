@@ -42,7 +42,7 @@ namespace ConsoleApp1
             // does not have to use this logging method
 
             var nconfig = new LoggingConfiguration();
-            var consoleTarget = new FileTarget() { FileName = "unittest.log"};
+            var consoleTarget = new FileTarget() { FileName = "C:\\Users\\sundance\\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
             nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
 
@@ -53,12 +53,12 @@ namespace ConsoleApp1
             // Create two gateways and two monitors simulating two
             // devices. Don't forget to start the monitor threads!
 
-            var gatewayA = new Keychain.Gateway("keychain-dotnet-a.db",
+            var gatewayA = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayA);
 
-            var monitorA = new Keychain.Monitor("keychain-dotnet-a.db",
+            var monitorA = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
             //Assert.AreNotEqual(null, monitorA);
@@ -66,12 +66,12 @@ namespace ConsoleApp1
             monitorA.onStart();
             monitorA.onResume();
 
-            var gatewayB = new Keychain.Gateway("keychain-dotnet-b.db",
+            var gatewayB = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayB);
 
-            var monitorB = new Keychain.Monitor("keychain-dotnet-b.db",
+            var monitorB = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
             //Assert.AreNotEqual(null, monitorB);
@@ -110,23 +110,33 @@ namespace ConsoleApp1
                 Persona personaA;
                 gatewayA.getActivePersona(out personaA);
 
-                if (personaA == null)
+                if (personaA == null || personaA.isNull())
                 {
+                    logger.Info("Creating persona A");
                     string personaNameA = "DotNetTest";
                     string personaSubNameA = "A";
                     rcode = gatewayA.createPersona(out personaA, personaNameA, personaSubNameA, SecurityLevel.Medium);
                     //Assert.AreEqual(0, rcode);
                 }
+                else
+                {
+                    logger.Info("Persona A already exists. Skipping creation of new persona.");
+                }
 
                 Persona personaB;
-                gatewayA.getActivePersona(out personaB);
-          
-                if (personaB == null)
+                gatewayB.getActivePersona(out personaB);
+
+                if (personaB == null || personaA.isNull())
                 {
+                    logger.Info("Creating persona B");
                     string personaNameB = "DotNetTest";
-                    string personaSubNameB = "A";
+                    string personaSubNameB = "B";
                     rcode = gatewayB.createPersona(out personaB, personaNameB, personaSubNameB, SecurityLevel.Medium);
                     //Assert.AreEqual(0, rcode);
+                }
+                else
+                {
+                    logger.Info("Persona B already exists. Skipping creation of new persona.");
                 }
             }
 
