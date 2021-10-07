@@ -9,6 +9,14 @@
  * encrypting / signing messages, exchanging and decrypting/verifying 
  * those message.
  * 
+ * NOTES:
+ * 
+ * Asserts are commented out but left in this code in case you would like to run as a Visual Studio test case
+ * 
+ * The code is annotated with notes where paths should be modified by the developer.
+ * 
+ * 
+ * 
  */
 
 
@@ -29,7 +37,7 @@ namespace ConsoleApp1
 {
     class Program
     {
-        // Set these paths to your own
+        // NOTE: SET THESE PATHS TO YOUR OWN PATHS
         private const string ConfigFile = "C:\\Users\\sundance\\keychain-builds\\windows\\Win32\\Debug\\test-keychain\\keychain.cfg";
         private const string DropSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\drop_keychain.sql";
         private const string CreateSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\keychain.sql";
@@ -42,6 +50,8 @@ namespace ConsoleApp1
             // does not have to use this logging method
 
             var nconfig = new LoggingConfiguration();
+
+            // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var consoleTarget = new FileTarget() { FileName = "C:\\Users\\sundance\\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
             nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
@@ -53,11 +63,13 @@ namespace ConsoleApp1
             // Create two gateways and two monitors simulating two
             // devices. Don't forget to start the monitor threads!
 
+            // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var gatewayA = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayA);
 
+            // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var monitorA = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
@@ -66,11 +78,13 @@ namespace ConsoleApp1
             monitorA.onStart();
             monitorA.onResume();
 
+            // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var gatewayB = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayB);
 
+            // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var monitorB = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
