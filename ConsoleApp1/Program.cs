@@ -140,7 +140,7 @@ namespace ConsoleApp1
                 Persona personaB;
                 gatewayB.getActivePersona(out personaB);
 
-                if (personaB == null || personaA.isNull())
+                if (personaB == null || personaB.isNull())
                 {
                     logger.Info("Creating persona B");
                     string personaNameB = "DotNetTest";
