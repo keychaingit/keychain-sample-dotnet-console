@@ -32,3 +32,5 @@ The code is annotated with notes where paths should be modified by the developer
 1. Change the paths to the .sql and .cfg files in the file Program.cs and check that they are consistent with your chosen file location for each.
 
 1. Build this project and run in Visual Studio.
+
+It is recommended that you delete your runtime database files (.db) after installing a new version of the sample or the Keychain Core library.
