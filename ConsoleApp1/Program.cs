@@ -183,9 +183,9 @@ namespace ConsoleApp1
             }
 
 
-
-
-            ConsoleApp.Directory directory = new ConsoleApp.Directory(gatewayA, "mitm-legit12345k");
+            // NOTE: CHANGE THIS DOMAIN STRING TO A STRING OF YOUR CHOOSING
+            string domain = "XXX-console-sample";
+            ConsoleApp.Directory directory = new ConsoleApp.Directory(gatewayA, domain);
             directory.Start();
 
             // Test self-encrypt/verification with device A
