@@ -38,9 +38,9 @@ namespace ConsoleApp1
     class Program
     {
         // NOTE: SET THESE PATHS TO YOUR OWN PATHS
-        private const string ConfigFile = "C:\\Users\\sundance\\keychain-builds\\windows\\Win32\\Debug\\test-keychain\\keychain.cfg";
-        private const string DropSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\drop_keychain.sql";
-        private const string CreateSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\keychain.sql";
+        private const string ConfigFile = "C:\\Users\\sundance\\Downloads\\Keychain-DotNet-x86-2.3.2\\bin\\keychain.cfg";
+        private const string DropSqlFile = "C:\\Users\\sundance\\Downloads\\Keychain-DotNet-x86-2.3.2\\bin\\drop_keychain.sql";
+        private const string CreateSqlFile = "C:\\Users\\sundance\\Downloads\\Keychain-DotNet-x86-2.3.2\\bin\\keychain.sql";
         public static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
@@ -75,9 +75,6 @@ namespace ConsoleApp1
 
             //Assert.AreNotEqual(null, monitorA);
 
-            monitorA.onStart();
-            monitorA.onResume();
-
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var gatewayB = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
@@ -89,9 +86,6 @@ namespace ConsoleApp1
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
             //Assert.AreNotEqual(null, monitorB);
-
-            monitorB.onStart();
-            monitorB.onResume();
 
 
 
@@ -155,6 +149,12 @@ namespace ConsoleApp1
             }
 
 
+            logger.Info("Starting monitors.");
+            monitorA.onStart();
+            monitorA.onResume();
+
+            monitorB.onStart();
+            monitorB.onResume();
 
 
             // Wait until persona is confirmed on the blockchain, ie is mature
@@ -172,7 +172,6 @@ namespace ConsoleApp1
 
             while (!activePersonaA.isMature() || !activePersonaB.isMature())
             {
-                Thread.Sleep(31000);
                 gatewayA.getActivePersona(out activePersonaA);
                 logger.Info("A root maturity: " + activePersonaA.getRootMaturity());
                 logger.Info("A status: " + activePersonaA.getStatus());
@@ -180,13 +179,14 @@ namespace ConsoleApp1
                 gatewayB.getActivePersona(out activePersonaB);
                 logger.Info("B root maturity: " + activePersonaB.getRootMaturity());
                 logger.Info("B status: " + activePersonaB.getStatus());
+                Thread.Sleep(31000);
             }
 
 
 
 
-
-
+            ConsoleApp.Directory directory = new ConsoleApp.Directory(gatewayA, "mitm-legit12345k");
+            directory.Start();
 
             // Test self-encrypt/verification with device A
 
@@ -320,6 +320,18 @@ namespace ConsoleApp1
             //Assert.AreEqual(rClearTextA, clearTextB);
             //Assert.AreEqual(1, results.Count);
             //Assert.AreEqual(true, results[0].verified);
+
+
+
+            logger.Info("Sleeping while directory runs.");
+            Thread.Sleep(23000);
+
+
+
+
+            // Stop the directory and monitors
+            directory.Stop();
+
             logger.Info("Done test.");
             logger.Info("Stopping monitor");
             monitorA.onPause();
@@ -328,6 +340,9 @@ namespace ConsoleApp1
             monitorB.onPause();
             monitorB.onStop();
             logger.Info("Monitor stopped");
+
+
+
         }
     }
 }
