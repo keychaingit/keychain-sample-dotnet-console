@@ -48,13 +48,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeychainCli, Version=1.0.7941.22190, Culture=neutral, PublicKeyToken=9649c4302e49d086, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\keychain-builds\windows\Win32\Release\bin\KeychainCli.dll</HintPath>
+    <Reference Include="KeychainCli">
+      <HintPath>..\..\..\KeychainCore\bin\KeychainCli.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\NLog.4.6.3\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NLog.4.7.14\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

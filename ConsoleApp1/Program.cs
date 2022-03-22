@@ -38,9 +38,9 @@ namespace ConsoleApp1
     class Program
     {
         // NOTE: SET THESE PATHS TO YOUR OWN PATHS
-        private const string ConfigFile = "C:\\Users\\sundance\\keychain-builds\\windows\\Win32\\Debug\\test-keychain\\keychain.cfg";
-        private const string DropSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\drop_keychain.sql";
-        private const string CreateSqlFile = "C:\\Users\\sundance\\workspace\\keychain\\keychain-libkeychain\\src\\database\\keychain.sql";
+        private const string ConfigFile = @"C:\Users\sundance\KeychainCore\config\keychain.cfg";
+        private const string DropSqlFile = @"C:\Users\sundance\KeychainCore\config\drop_keychain.sql";
+        private const string CreateSqlFile = @"C:\Users\sundance\KeychainCore\config\keychain.sql";
         public static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
@@ -52,9 +52,9 @@ namespace ConsoleApp1
             var nconfig = new LoggingConfiguration();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var consoleTarget = new FileTarget() { FileName = "C:\\Users\\sundance\\unittest.log" };
+            var consoleTarget = new FileTarget() { FileName = @"C:\Users\sundance\KeychainCore\logs\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
-            nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
+            nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
 
             LogManager.Configuration = nconfig;
 
@@ -64,13 +64,13 @@ namespace ConsoleApp1
             // devices. Don't forget to start the monitor threads!
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayA = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
+            var gatewayA = new Keychain.Gateway(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayA);
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var monitorA = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-a.db",
+            var monitorA = new Keychain.Monitor(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
             //Assert.AreNotEqual(null, monitorA);
@@ -79,13 +79,13 @@ namespace ConsoleApp1
             monitorA.onResume();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayB = new Keychain.Gateway("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
+            var gatewayB = new Keychain.Gateway(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayB);
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var monitorB = new Keychain.Monitor("C:\\Users\\sundance\\keychain-data\\keychain-dotnet-b.db",
+            var monitorB = new Keychain.Monitor(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile);
 
             //Assert.AreNotEqual(null, monitorB);
@@ -172,13 +172,11 @@ namespace ConsoleApp1
 
             while (!activePersonaA.isMature() || !activePersonaB.isMature())
             {
-                Thread.Sleep(31000);
+                Thread.Sleep(11000);
                 gatewayA.getActivePersona(out activePersonaA);
-                logger.Info("A root maturity: " + activePersonaA.getRootMaturity());
                 logger.Info("A status: " + activePersonaA.getStatus());
 
                 gatewayB.getActivePersona(out activePersonaB);
-                logger.Info("B root maturity: " + activePersonaB.getRootMaturity());
                 logger.Info("B status: " + activePersonaB.getStatus());
             }
 
