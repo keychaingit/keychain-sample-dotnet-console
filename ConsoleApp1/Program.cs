@@ -38,9 +38,9 @@ namespace ConsoleApp1
     class Program
     {
         // NOTE: SET THESE PATHS TO YOUR OWN PATHS
-        private const string ConfigFile = @"C:\Users\sundance\KeychainCore\config\keychain.cfg";
-        private const string DropSqlFile = @"C:\Users\sundance\KeychainCore\config\drop_keychain.sql";
-        private const string CreateSqlFile = @"C:\Users\sundance\KeychainCore\config\keychain.sql";
+        private const string ConfigFile = @"C:\Users\Robert Ellis\KeychainCore\config\keychain.cfg";
+        private const string DropSqlFile = @"C:\Users\Robert Ellis\KeychainCore\config\drop_keychain.sql";
+        private const string CreateSqlFile = @"C:\Users\Robert Ellis\KeychainCore\config\keychain.sql";
         public static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
@@ -52,7 +52,7 @@ namespace ConsoleApp1
             var nconfig = new LoggingConfiguration();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var consoleTarget = new FileTarget() { FileName = @"C:\Users\sundance\KeychainCore\logs\unittest.log" };
+            var consoleTarget = new FileTarget() { FileName = @"C:\Users\Robert Ellis\KeychainCore\logs\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
             nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
 
@@ -60,38 +60,25 @@ namespace ConsoleApp1
 
 
 
-            // Create two gateways and two monitors simulating two
-            // devices. Don't forget to start the monitor threads!
+            // Create two gateways simulating two devices. Remember to start the gateway threads!
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayA = new Keychain.Gateway(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-a.db",
+            var gatewayA = new Keychain.Gateway(@"C:\Users\Robert Ellis\KeychainCore\data\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayA);
 
-            // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var monitorA = new Keychain.Monitor(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-a.db",
-                ConfigFile, DropSqlFile, CreateSqlFile);
-
-            //Assert.AreNotEqual(null, monitorA);
-
-            monitorA.onStart();
-            monitorA.onResume();
+            gatewayA.onStart();
+            gatewayA.onResume();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayB = new Keychain.Gateway(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-b.db",
+            var gatewayB = new Keychain.Gateway(@"C:\Users\Robert Ellis\KeychainCore\data\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayB);
 
-            // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var monitorB = new Keychain.Monitor(@"C:\Users\sundance\KeychainCore\data\keychain-dotnet-b.db",
-                ConfigFile, DropSqlFile, CreateSqlFile);
-
-            //Assert.AreNotEqual(null, monitorB);
-
-            monitorB.onStart();
-            monitorB.onResume();
+            gatewayB.onStart();
+            gatewayB.onResume();
 
 
 
@@ -319,13 +306,13 @@ namespace ConsoleApp1
             //Assert.AreEqual(1, results.Count);
             //Assert.AreEqual(true, results[0].verified);
             logger.Info("Done test.");
-            logger.Info("Stopping monitor");
-            monitorA.onPause();
-            monitorA.onStop();
+            logger.Info("Stopping gateway");
+            gatewayA.onPause();
+            gatewayA.onStop();
 
-            monitorB.onPause();
-            monitorB.onStop();
-            logger.Info("Monitor stopped");
+            gatewayB.onPause();
+            gatewayB.onStop();
+            logger.Info("Gateway stopped");
         }
     }
 }
