@@ -54,7 +54,8 @@ namespace ConsoleApp1
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
             var consoleTarget = new FileTarget() { FileName = @"C:\Users\Robert Ellis\KeychainCore\logs\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
-            nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
+            nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
+            nconfig.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: new ConsoleTarget("consoleTarget") { Layout = "${longdate} level=${level} message=${message}" });
 
             LogManager.Configuration = nconfig;
 
@@ -157,14 +158,31 @@ namespace ConsoleApp1
             gatewayA.getActivePersona(out activePersonaA);
             gatewayB.getActivePersona(out activePersonaB);
 
-            while (!activePersonaA.isMature() || !activePersonaB.isMature())
+            while (activePersonaA == null || activePersonaB == null || !activePersonaA.isMature() || !activePersonaB.isMature())
             {
-                Thread.Sleep(11000);
                 gatewayA.getActivePersona(out activePersonaA);
-                logger.Info("A status: " + activePersonaA.getStatus());
 
+                if (activePersonaA != null)
+                {
+                    logger.Info("A status: " + activePersonaA.getStatus());
+                } 
+                else
+                {
+                    logger.Info("Waiting for persona A to mature");
+                }
+               
                 gatewayB.getActivePersona(out activePersonaB);
-                logger.Info("B status: " + activePersonaB.getStatus());
+
+                if (activePersonaB != null)
+                {
+                    logger.Info("B status: " + activePersonaB.getStatus());
+                }
+                else
+                {
+                    logger.Info("Waiting for persona B to mature");
+                }
+
+                Thread.Sleep(11000);
             }
 
 
