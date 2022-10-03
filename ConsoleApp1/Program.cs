@@ -1,22 +1,22 @@
 ﻿/*
- * 
- * 
- * Sample test program using Keychain 
- * 
+ *
+ *
+ * Sample test program using Keychain
+ *
  * This program illustrates the core functionality of Keychain.
- * 
- * It gives an example of two devices pairing and 
- * encrypting / signing messages, exchanging and decrypting/verifying 
+ *
+ * It gives an example of two devices pairing and
+ * encrypting / signing messages, exchanging and decrypting/verifying
  * those message.
- * 
+ *
  * NOTES:
- * 
+ *
  * Asserts are commented out but left in this code in case you would like to run as a Visual Studio test case
- * 
+ *
  * The code is annotated with notes where paths should be modified by the developer.
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 
@@ -85,7 +85,7 @@ namespace ConsoleApp1
 
 
             // Seed the SPV wallets
-            // Normally, you will display the mnemonics strings 
+            // Normally, you will display the mnemonics strings
             // to the user for safe keeping
 
 
@@ -143,12 +143,18 @@ namespace ConsoleApp1
             }
 
 
+            logger.Info("Starting monitors.");
+            monitorA.onStart();
+            monitorA.onResume();
+
+            monitorB.onStart();
+            monitorB.onResume();
 
 
             // Wait until persona is confirmed on the blockchain, ie is mature
 
-            // Here, the wait time between checks is arbitrary. Block times 
-            // range from a few mintues to ten minutes, so any wait time will 
+            // Here, the wait time between checks is arbitrary. Block times
+            // range from a few mintues to ten minutes, so any wait time will
             // suffice. Most real applications are GUI-based hence there will
             // be no need for this type of waiting loop; just prevent the user
             // from seeing/doing anything with the persona in the main UI loop
@@ -165,12 +171,12 @@ namespace ConsoleApp1
                 if (activePersonaA != null)
                 {
                     logger.Info("A status: " + activePersonaA.getStatus());
-                } 
+                }
                 else
                 {
                     logger.Info("Waiting for persona A to mature");
                 }
-               
+
                 gatewayB.getActivePersona(out activePersonaB);
 
                 if (activePersonaB != null)
@@ -186,10 +192,10 @@ namespace ConsoleApp1
             }
 
 
-
-
-
-
+            // NOTE: CHANGE THIS DOMAIN STRING TO A STRING OF YOUR CHOOSING
+            string domain = "XXX-console-sample";
+            ConsoleApp.Directory directory = new ConsoleApp.Directory(gatewayA, domain);
+            directory.Start();
 
             // Test self-encrypt/verification with device A
 
@@ -323,6 +329,18 @@ namespace ConsoleApp1
             //Assert.AreEqual(rClearTextA, clearTextB);
             //Assert.AreEqual(1, results.Count);
             //Assert.AreEqual(true, results[0].verified);
+
+
+
+            logger.Info("Sleeping while directory runs.");
+            Thread.Sleep(23000);
+
+
+
+
+            // Stop the directory and monitors
+            directory.Stop();
+
             logger.Info("Done test.");
             logger.Info("Stopping gateway");
             gatewayA.onPause();
