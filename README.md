@@ -14,7 +14,6 @@ Asserts are commented out but left in this code in case you would like to run as
 
 The code is annotated with notes where paths should be modified by the developer.
 
-
 # Installation
 
 1. Clone this repo.
@@ -34,3 +33,8 @@ The code is annotated with notes where paths should be modified by the developer
 1. Build this project and run in Visual Studio.
 
 It is recommended that you delete your runtime database files (.db) after installing a new version of the sample or the Keychain Core library.
+# Directory client
+
+This branch features the use of a directory client that uploads the URI of the active persona and downloads the URI of other devices that published their URIs to the same directory domain. The directory client periodically downloads the URIs on the domain and for any URIs that have not already been added as a Contact, it adds them.
+
+This feature will eventually be merged into the Keychain dll in a utility namespace, but for reasons of convenience it is placed here in this sample for use by developers.
