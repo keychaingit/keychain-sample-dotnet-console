@@ -38,9 +38,9 @@ namespace ConsoleApp1
     class Program
     {
         // NOTE: SET THESE PATHS TO YOUR OWN PATHS
-        private const string ConfigFile = @"C:\Users\Robert Ellis\KeychainCore\config\keychain.cfg";
-        private const string DropSqlFile = @"C:\Users\Robert Ellis\KeychainCore\config\drop_keychain.sql";
-        private const string CreateSqlFile = @"C:\Users\Robert Ellis\KeychainCore\config\keychain.sql";
+        private const string ConfigFile = @"C:\KeychainCore\config\keychain.cfg";
+        private const string DropSqlFile = @"C:\KeychainCore\config\drop_keychain.sql";
+        private const string CreateSqlFile = @"C:\KeychainCore\config\keychain.sql";
         public static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
@@ -52,7 +52,7 @@ namespace ConsoleApp1
             var nconfig = new LoggingConfiguration();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var consoleTarget = new FileTarget() { FileName = @"C:\Users\Robert Ellis\KeychainCore\logs\unittest.log" };
+            var consoleTarget = new FileTarget() { FileName = @"C:\KeychainCore\logs\unittest.log" };
             nconfig.AddTarget("console", consoleTarget);
             nconfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
             nconfig.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: new ConsoleTarget("consoleTarget") { Layout = "${longdate} level=${level} message=${message}" });
@@ -64,7 +64,7 @@ namespace ConsoleApp1
             // Create two gateways simulating two devices. Remember to start the gateway threads!
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayA = new Keychain.Gateway(@"C:\Users\Robert Ellis\KeychainCore\data\keychain-dotnet-a.db",
+            var gatewayA = new Keychain.Gateway(@"C:\KeychainCore\data\keychain-dotnet-a.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayA);
@@ -73,7 +73,7 @@ namespace ConsoleApp1
             gatewayA.onResume();
 
             // NOTE: SET THIS PATH TO YOUR OWN PATHS
-            var gatewayB = new Keychain.Gateway(@"C:\Users\Robert Ellis\KeychainCore\data\keychain-dotnet-b.db",
+            var gatewayB = new Keychain.Gateway(@"C:\KeychainCore\data\keychain-dotnet-b.db",
                 ConfigFile, DropSqlFile, CreateSqlFile, false);
 
             //Assert.AreNotEqual(null, gatewayB);
@@ -144,11 +144,11 @@ namespace ConsoleApp1
 
 
             logger.Info("Starting monitors.");
-            monitorA.onStart();
-            monitorA.onResume();
+            gatewayA.onStart();
+            gatewayA.onResume();
 
-            monitorB.onStart();
-            monitorB.onResume();
+            gatewayB.onStart();
+            gatewayB.onResume();
 
 
             // Wait until persona is confirmed on the blockchain, ie is mature
